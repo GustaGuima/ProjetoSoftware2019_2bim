@@ -8,7 +8,9 @@ public class AplicacaoJanela {
 		janela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		janela.setVisible(true);*/
 		
-		JanelaEntrada janela = new JanelaEntrada();
+		//JanelaEntrada janela = new JanelaEntrada();
+		
+		MouseFrame mouse = new MouseFrame();
 		
 		
 	}
