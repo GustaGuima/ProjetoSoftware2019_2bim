@@ -10,8 +10,9 @@ public class AplicacaoJanela {
 		
 		//JanelaEntrada janela = new JanelaEntrada();
 		
-		MouseFrame mouse = new MouseFrame();
+		//MouseFrame mouse = new MouseFrame();
 		
+		LinhaRetaOval ovo = new LinhaRetaOval();
 		
 	}
 
