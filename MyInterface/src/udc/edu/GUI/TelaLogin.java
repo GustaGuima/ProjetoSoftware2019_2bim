@@ -7,10 +7,16 @@ import java.awt.event.MouseMotionListener;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import java.awt.List;
+import java.awt.Panel;
+import javax.swing.JLabel;
+import javax.swing.border.TitledBorder;
+import javax.swing.UIManager;
+import java.awt.Color;
 
 public class TelaLogin {
 
-	private JFrame frame;
+	private JFrame frmPaint;
 
 	
 	
@@ -19,7 +25,7 @@ public class TelaLogin {
 			public void run() {
 				try {
 					TelaLogin window = new TelaLogin();
-					window.frame.setVisible(true);
+					window.frmPaint.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -38,26 +44,50 @@ public class TelaLogin {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frame = new JFrame();
-		frame.setBounds(100, 100, 880, 568);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(null);
+		frmPaint = new JFrame();
+		frmPaint.setTitle("Paint 2.0");
+		frmPaint.setBounds(100, 100, 880, 568);
+		frmPaint.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmPaint.getContentPane().setLayout(null);
 		
-		Draw panel = new Draw();
-		panel.setBounds(0, 0, 862, 531);
-		frame.getContentPane().add(panel);
-		panel.addMouseMotionListener(new MouseMotionListener() {
+		Draw paint = new Draw();
+		paint.setBounds(0, 62, 862, 398);
+		frmPaint.getContentPane().add(paint);
+		
+		Panel cabecalho = new Panel();
+		cabecalho.setBounds(0, 0, 862, 61);
+		frmPaint.getContentPane().add(cabecalho);
+		
+		Panel rodape = new Panel();
+		rodape.setBounds(0, 460, 862, 61);
+		frmPaint.getContentPane().add(rodape);
+		rodape.setLayout(null);
+		
+		JLabel positionY = new JLabel("");
+		positionY.setBorder(new TitledBorder(null, "Y", TitledBorder.CENTER, TitledBorder.TOP, null, null));
+		positionY.setBounds(100, 13, 53, 35);
+		rodape.add(positionY);
+		
+		JLabel positionX = new JLabel("");
+		positionX.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "X", TitledBorder.CENTER, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		positionX.setBounds(35, 13, 53, 35);
+		rodape.add(positionX);
+		
+		
+		
+		
+		paint.addMouseMotionListener(new MouseMotionListener() {
 			
 			@Override
 			public void mouseMoved(MouseEvent e) {}
 			
 			@Override
 			public void mouseDragged(MouseEvent e) {
-				panel.mouseDragged(e);
+				paint.mouseDragged(e);
 				
 			}
 		});
-		panel.addMouseListener(new MouseListener() {
+		paint.addMouseListener(new MouseListener() {
 			
 			@Override
 			public void mouseReleased(MouseEvent e) {
@@ -67,7 +97,7 @@ public class TelaLogin {
 			
 			@Override
 			public void mousePressed(MouseEvent e) {
-				panel.mousePressed(e);
+				paint.mousePressed(e);
 				
 			}
 			
