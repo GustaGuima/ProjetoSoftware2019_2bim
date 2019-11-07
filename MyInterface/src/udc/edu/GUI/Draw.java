@@ -18,47 +18,12 @@ public class Draw extends Panel implements MouseListener, MouseMotionListener{
 	
 	public int grossuraPincel;
 	private Path2D forma_2d;
-	private Point inicio;
-	private Point fim;
-	private int altura;
-	private int largura;
+	private int uX, uY, x, y;
 	public boolean bool_forma = false, bool_retangulo = false, bool_circulo = false;
 	
-	private int uX, uY, x, y;
+	protected Point mousePressed;
+	protected Point mouseReleased;
 	
-	 
-	
-	public Point getInicio() {
-		return inicio;
-	}
-
-	public void setInicio(Point inicio) {
-		this.inicio = inicio;
-	}
-
-	public Point getFim() {
-		return fim;
-	}
-
-	public void setFim(Point fim) {
-		this.fim = fim;
-	}
-
-	public int getAltura() {
-		return altura;
-	}
-
-	public void setAltura(int altura) {
-		this.altura = altura;
-	}
-
-	public int getLargura() {
-		return largura;
-	}
-
-	public void setLargura(int largura) {
-		this.largura = largura;
-	}
 
 	public Color getColor() {
 		return color;
@@ -141,25 +106,6 @@ public class Draw extends Panel implements MouseListener, MouseMotionListener{
 	}
 	
 
-	public Draw(Color color, int grossuraPincel, Path2D forma_2d, Point inicio, Point fim, int altura, int largura,
-		boolean bool_forma, boolean bool_retangulo, boolean bool_circulo, int uX, int uY, int x, int y) {
-		super();
-		this.color = color;
-		this.grossuraPincel = grossuraPincel;
-		this.forma_2d = forma_2d;
-		this.inicio = inicio;
-		this.fim = fim;
-		this.altura = altura;
-		this.largura = largura;
-		this.bool_forma = bool_forma;
-		this.bool_retangulo = bool_retangulo;
-		this.bool_circulo = bool_circulo;
-		this.uX = uX;
-		this.uY = uY;
-		this.x = x;
-		this.y = y;
-	}
-
 	public Draw() {
 		this.color = Color.BLACK;
 		this.setBackground(Color.white);
@@ -176,18 +122,20 @@ public class Draw extends Panel implements MouseListener, MouseMotionListener{
 		draw.setStroke(new BasicStroke(this.grossuraPincel));
 		draw.setColor(this.color);
 		draw.draw(this.forma_2d);
-		
-		
 	}
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
+		DuasDimensoes c = null;
 		this.x = e.getX();
 		this.y = e.getY();
 		if(this.bool_forma) {
-			this.forma_2d.lineTo(this.x, this.y);
+			forma_2d.lineTo(this.getX(), this.getY());
 		}
 		if(this.bool_retangulo) {
+			
+		}
+		if(this.bool_circulo) {
 			
 		}
 		repaint();
