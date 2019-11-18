@@ -11,18 +11,16 @@ public class Linha extends DuasDimensoes{
 		
 		super.paintComponents(g);
 		g.setColor(color);
-		g.drawLine(0, 0, 1, 1);
+		g.drawLine(inicio.x, inicio.y, fim.x, fim.y);
 	
 	}
 
 	public Linha() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public Linha(boolean preenchido, int altura, int largura, Point inicio, Point fim, Color color) {
 		super(preenchido, altura, largura, inicio, fim, color);
-		// TODO Auto-generated constructor stub
 	}
 
 	

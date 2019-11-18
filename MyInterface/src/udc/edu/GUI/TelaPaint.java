@@ -10,22 +10,32 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.geom.Path2D;
 
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
+import java.awt.event.MouseMotionAdapter;
 
 public class TelaPaint {
 
 	private JFrame frmPaint;
 	protected Point mousePos;
-	private Draw paint = new Draw();
+	private JPanel paint = new JPanel();	
 	protected JColorChooser chooseColor;
 	protected Color choosedColor = Color.BLACK;
+	
+	protected Path2D shape = new Path2D.Float();
+	
+	protected Point mouseReleased;
+	protected Point mousePressed;
+	protected int forma = 1;
+	protected boolean preenchido = false;
 
 	
 	
@@ -59,17 +69,87 @@ public class TelaPaint {
 		frmPaint.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmPaint.getContentPane().setLayout(null);
 		
+		paint.setBackground(Color.WHITE);
+		paint.setBounds(0, 62, 862, 400);
+		frmPaint.getContentPane().add(paint);
+		
+		paint.addMouseListener(new MouseListener() {
+		
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			mouseReleased = paint.getMousePosition();
+			DuasDimensoes c = null;
+			switch(forma) {
+			case 1:
+				c = new Linha();
+				break;
+			case 2:
+				c = new Retangulo();
+				break;
+			case 3:
+				c = new Oval();
+				break;
+				
+			}
+			c.setInicio(mousePressed);
+			c.setFim(mouseReleased);
+			c.setLargura(mouseReleased.x - mousePressed.x);
+			c.setAltura(mouseReleased.y - mousePressed.y);
+			c.setPreenchido(preenchido);
+			c.setColor(choosedColor);
+			c.setLocation(mousePressed);
+			c.setSize(c.getLargura(), c.getAltura());
+			
+			paint.add(c);
+			
+			paint.repaint();
+		}
+		
+		@Override
+		public void mousePressed(MouseEvent e) {
+			mousePressed = paint.getMousePosition();
+			
+		}
+		
+		@Override
+		public void mouseExited(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+		});
+		
 		Panel cabecalho = new Panel();
 		cabecalho.setBounds(0, 0, 862, 61);
 		frmPaint.getContentPane().add(cabecalho);
 		cabecalho.setLayout(null);
 		
-		JButton livreButton = new JButton("Livre");
+		Panel rodape = new Panel();
+		rodape.setBounds(0, 460, 862, 61);
+		frmPaint.getContentPane().add(rodape);
+		rodape.setLayout(null);
+		
+		JLabel figuraSelecionada = new JLabel("");
+		figuraSelecionada.setBorder(new TitledBorder(null, "Figura", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		figuraSelecionada.setBounds(649, 13, 86, 35);
+		rodape.add(figuraSelecionada);
+		
+		JButton livreButton = new JButton("Linha");
 		livreButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				paint.setBool_forma(true);
-				paint.setBool_circulo(false);
-				paint.setBool_retangulo(false);
+				forma = 1;
+				figuraSelecionada.setText("Linha");
 			}
 		});
 		livreButton.setBounds(744, 30, 108, 25);
@@ -78,9 +158,8 @@ public class TelaPaint {
 		JButton btnRetangulo = new JButton("Retangulo");
 		btnRetangulo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				paint.setBool_forma(false);
-				paint.setBool_circulo(false);
-				paint.setBool_retangulo(true);
+				forma = 2;
+				figuraSelecionada.setText("Retangulo");
 			}
 		});
 		btnRetangulo.setBounds(629, 30, 108, 25);
@@ -89,18 +168,27 @@ public class TelaPaint {
 		JButton btnCirculo = new JButton("Circulo");
 		btnCirculo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				paint.setBool_forma(false);
-				paint.setBool_circulo(true);
-				paint.setBool_retangulo(false);
+				forma = 3;
+				figuraSelecionada.setText("Circulo");
 			}
 		});
 		btnCirculo.setBounds(513, 30, 108, 25);
 		cabecalho.add(btnCirculo);
 		
-		Panel rodape = new Panel();
-		rodape.setBounds(0, 460, 862, 61);
-		frmPaint.getContentPane().add(rodape);
-		rodape.setLayout(null);
+		JButton btnPreenchido = new JButton("Preenchido");
+		btnPreenchido.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(preenchido) {
+					preenchido = false;
+				}else {
+					preenchido = true;
+				}
+			}
+		});
+		btnPreenchido.setBounds(248, 31, 108, 23);
+		cabecalho.add(btnPreenchido);
+		
+
 		
 		JLabel positionY = new JLabel("");
 		positionY.setBorder(new TitledBorder(null, "Y", TitledBorder.CENTER, TitledBorder.TOP, null, null));
@@ -123,7 +211,6 @@ public class TelaPaint {
 			public void actionPerformed(ActionEvent e) {
 				chooseColor = new JColorChooser();
 				choosedColor = chooseColor.showDialog(null, "Choose your Color", Color.BLACK);
-				paint.setColor(choosedColor);
 				corEscolhida.setBackground(choosedColor);
 				corEscolhida.setOpaque(true);
 			
@@ -140,64 +227,6 @@ public class TelaPaint {
 		label.setBorder(new TitledBorder(null, "Qtd", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		label.setBounds(774, 13, 56, 35);
 		rodape.add(label);
-		
-		
-		paint.setBounds(0, 0, 862, 462);
-		frmPaint.getContentPane().add(paint);
-			
-		
-		paint.addMouseMotionListener(new MouseMotionListener() {
-			
-			@Override
-			public void mouseMoved(MouseEvent e) {
-				mousePos = paint.getMousePosition();
-				positionX.setText(String.valueOf(mousePos.getX()));
-				positionY.setText(String.valueOf(mousePos.getY()));
-				
-			}
-			
-			@Override
-			public void mouseDragged(MouseEvent e) {
-				paint.mouseDragged(e);
-				mousePos = paint.getMousePosition();
-				positionX.setText(String.valueOf(mousePos.getX()));
-				positionY.setText(String.valueOf(mousePos.getY()));
-				
-				
-			}
-		});
-		paint.addMouseListener(new MouseListener() {
-			
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void mousePressed(MouseEvent e) {
-				paint.mousePressed(e);
-				
-			}
-			
-			@Override
-			public void mouseExited(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-		});
 		
 	}
 }

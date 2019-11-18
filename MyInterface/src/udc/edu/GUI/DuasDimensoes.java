@@ -1,10 +1,11 @@
 package udc.edu.GUI;
 
 import java.awt.Color;
-import java.awt.Panel;
 import java.awt.Point;
 
-public class DuasDimensoes extends Panel{
+import javax.swing.JPanel;
+
+public class DuasDimensoes extends JPanel{
 	private static final long serialVersionUID = 1L;
 	
 	protected boolean preenchido = false;
@@ -16,6 +17,7 @@ public class DuasDimensoes extends Panel{
 	
 	public DuasDimensoes() {
 		super();
+		setOpaque(false);
 	}
 
 	public DuasDimensoes(boolean preenchido, int altura, int largura, Point inicio, Point fim, Color color) {
