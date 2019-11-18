@@ -11,16 +11,21 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.Path2D;
+import java.util.ArrayList;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
 import java.awt.event.MouseMotionAdapter;
+import javax.swing.JScrollPane;
+import javax.swing.ListSelectionModel;
 
 public class TelaPaint {
 
@@ -36,6 +41,11 @@ public class TelaPaint {
 	protected Point mousePressed;
 	protected int forma = 1;
 	protected boolean preenchido = false;
+	
+	protected Oval[] circulos = new Oval[500];
+	private int contadorCirculos = 0,  contadorRetangulos = 0, contadorLinhas = 0;
+	
+	private JList list;
 
 	
 	
@@ -70,8 +80,21 @@ public class TelaPaint {
 		frmPaint.getContentPane().setLayout(null);
 		
 		paint.setBackground(Color.WHITE);
-		paint.setBounds(0, 62, 862, 400);
+		paint.setBounds(137, 67, 725, 400);
 		frmPaint.getContentPane().add(paint);
+		
+		Panel rodape = new Panel();
+		rodape.setBounds(0, 460, 862, 61);
+		frmPaint.getContentPane().add(rodape);
+		rodape.setLayout(null);
+		
+		JLabel label = new JLabel("");
+		label.setHorizontalTextPosition(SwingConstants.CENTER);
+		label.setHorizontalAlignment(SwingConstants.CENTER);
+		label.setBorder(new TitledBorder(null, "Qtd", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		label.setBounds(774, 13, 56, 35);
+		rodape.add(label);
+		label.setText(String.valueOf(contadorCirculos));
 		
 		paint.addMouseListener(new MouseListener() {
 		
@@ -91,6 +114,7 @@ public class TelaPaint {
 				break;
 				
 			}
+			
 			c.setInicio(mousePressed);
 			c.setFim(mouseReleased);
 			c.setLargura(mouseReleased.x - mousePressed.x);
@@ -99,10 +123,15 @@ public class TelaPaint {
 			c.setColor(choosedColor);
 			c.setLocation(mousePressed);
 			c.setSize(c.getLargura(), c.getAltura());
-			
 			paint.add(c);
-			
 			paint.repaint();
+			
+			if(forma == 3) {
+				circulos[contadorCirculos] = (Oval)c;
+				list.setListData(circulos);
+				contadorCirculos++;
+			}
+			
 		}
 		
 		@Override
@@ -131,14 +160,9 @@ public class TelaPaint {
 		});
 		
 		Panel cabecalho = new Panel();
-		cabecalho.setBounds(0, 0, 862, 61);
+		cabecalho.setBounds(139, 0, 725, 61);
 		frmPaint.getContentPane().add(cabecalho);
 		cabecalho.setLayout(null);
-		
-		Panel rodape = new Panel();
-		rodape.setBounds(0, 460, 862, 61);
-		frmPaint.getContentPane().add(rodape);
-		rodape.setLayout(null);
 		
 		JLabel figuraSelecionada = new JLabel("");
 		figuraSelecionada.setBorder(new TitledBorder(null, "Figura", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -152,7 +176,7 @@ public class TelaPaint {
 				figuraSelecionada.setText("Linha");
 			}
 		});
-		livreButton.setBounds(744, 30, 108, 25);
+		livreButton.setBounds(587, 30, 108, 25);
 		cabecalho.add(livreButton);
 		
 		JButton btnRetangulo = new JButton("Retangulo");
@@ -162,7 +186,7 @@ public class TelaPaint {
 				figuraSelecionada.setText("Retangulo");
 			}
 		});
-		btnRetangulo.setBounds(629, 30, 108, 25);
+		btnRetangulo.setBounds(469, 30, 108, 25);
 		cabecalho.add(btnRetangulo);
 		
 		JButton btnCirculo = new JButton("Circulo");
@@ -172,7 +196,7 @@ public class TelaPaint {
 				figuraSelecionada.setText("Circulo");
 			}
 		});
-		btnCirculo.setBounds(513, 30, 108, 25);
+		btnCirculo.setBounds(338, 30, 108, 25);
 		cabecalho.add(btnCirculo);
 		
 		JButton btnPreenchido = new JButton("Preenchido");
@@ -185,7 +209,7 @@ public class TelaPaint {
 				}
 			}
 		});
-		btnPreenchido.setBounds(248, 31, 108, 23);
+		btnPreenchido.setBounds(151, 31, 108, 23);
 		cabecalho.add(btnPreenchido);
 		
 
@@ -221,12 +245,23 @@ public class TelaPaint {
 		corButton.setBounds(209, 13, 97, 35);
 		rodape.add(corButton);
 		
-		JLabel label = new JLabel("");
-		label.setHorizontalTextPosition(SwingConstants.CENTER);
-		label.setHorizontalAlignment(SwingConstants.CENTER);
-		label.setBorder(new TitledBorder(null, "Qtd", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		label.setBounds(774, 13, 56, 35);
-		rodape.add(label);
+		JPanel Lista = new JPanel();
+		Lista.setBounds(0, 0, 133, 455);
+		frmPaint.getContentPane().add(Lista);
+		Lista.setLayout(null);
+		list = new JList<String>();
+		list.setFont(new Font("Tahoma", Font.PLAIN, 7));
+		list.setForeground(new Color(0, 0, 0));
+		
+		list.setBorder(BorderFactory.createTitledBorder("Informacoes Figura"));
+		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+	
+		JScrollPane scrollPane = new JScrollPane(list);
+		scrollPane.setBounds(3, 5, 130, 450);
+		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		scrollPane.setBorder(null);
+		Lista.add(scrollPane);
 		
 	}
 }
