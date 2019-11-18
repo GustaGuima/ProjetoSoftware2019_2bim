@@ -9,9 +9,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.awt.geom.Path2D;
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -20,12 +19,11 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
-import java.awt.event.MouseMotionAdapter;
-import javax.swing.JScrollPane;
-import javax.swing.ListSelectionModel;
 
 public class TelaPaint {
 
@@ -43,6 +41,8 @@ public class TelaPaint {
 	protected boolean preenchido = false;
 	
 	protected Oval[] circulos = new Oval[500];
+	protected LinkedList<Oval> circulosList = new LinkedList<Oval>();
+	
 	private int contadorCirculos = 0,  contadorRetangulos = 0, contadorLinhas = 0;
 	
 	private JList list;
@@ -87,15 +87,6 @@ public class TelaPaint {
 		rodape.setBounds(0, 460, 862, 61);
 		frmPaint.getContentPane().add(rodape);
 		rodape.setLayout(null);
-		
-		JLabel label = new JLabel("");
-		label.setHorizontalTextPosition(SwingConstants.CENTER);
-		label.setHorizontalAlignment(SwingConstants.CENTER);
-		label.setBorder(new TitledBorder(null, "Qtd", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		label.setBounds(774, 13, 56, 35);
-		rodape.add(label);
-		label.setText(String.valueOf(contadorCirculos));
-		
 		paint.addMouseListener(new MouseListener() {
 		
 		@Override
@@ -128,7 +119,9 @@ public class TelaPaint {
 			
 			if(forma == 3) {
 				circulos[contadorCirculos] = (Oval)c;
-				list.setListData(circulos);
+				circulosList.add((Oval) c);
+				//list.setListData(circulos);
+				list.setListData(circulosList.toArray());
 				contadorCirculos++;
 			}
 			
@@ -244,6 +237,13 @@ public class TelaPaint {
 		corButton.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		corButton.setBounds(209, 13, 97, 35);
 		rodape.add(corButton);
+		
+		JLabel label = new JLabel("");
+		label.setHorizontalTextPosition(SwingConstants.CENTER);
+		label.setHorizontalAlignment(SwingConstants.CENTER);
+		label.setBorder(new TitledBorder(null, "Qtd", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		label.setBounds(774, 13, 56, 35);
+		rodape.add(label);
 		
 		JPanel Lista = new JPanel();
 		Lista.setBounds(0, 0, 133, 455);
